@@ -11,8 +11,8 @@ import java.util.HashSet;
  */
 public class Queen extends Piece {
 
-	public Queen(int xPos, int yPos, Color color) {
-		super(xPos, yPos, color);
+	public Queen(int row, int col, Color color) {
+		super(row, col, color);
 	}	
 
 	@Override

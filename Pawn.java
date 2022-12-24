@@ -13,8 +13,8 @@ public class Pawn extends Piece {
 	
 	public boolean hasMoved;
 	
-	public Pawn(int Row, int  col, Color color) {
-		super(Row, col, color);
+	public Pawn(int row, int  col, Color color) {
+		super(row, col, color);
 		hasMoved = false;
 	}
 

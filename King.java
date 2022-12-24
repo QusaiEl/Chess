@@ -14,8 +14,8 @@ public class King extends Piece{ // issue with white king taking on the its firs
 	
 	public boolean hasMoved = false;
 	
-	public King(int xPos, int yPos, Color color) {
-		super(xPos, yPos, color);
+	public King(int row, int col, Color color) {
+		super(row, col, color);
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class King extends Piece{ // issue with white king taking on the its firs
 		putKingMoves(outSet);
 		return outSet;
 	}
-	
+
 	private void putKingMoves(HashSet<Square> outSet) { // can be done with a loop excluding 0 from -1 to 1
 		
 		if(isMoveableSpace(row + 1, col) && isSafeMove(row + 1, col)) {

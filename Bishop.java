@@ -11,8 +11,8 @@ import java.util.HashSet;
  */
 public class Bishop extends Piece{
 
-	public Bishop(int xPos, int yPos, Color color) {
-		super(xPos, yPos, color);
+	public Bishop(int row, int col, Color color) {
+		super(row, col, color);
 	}
 	
 

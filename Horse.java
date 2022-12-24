@@ -11,8 +11,8 @@ import java.util.HashSet;
  */
 public class Horse extends Piece{
 
-	public Horse(int xPos, int yPos, Color color) {
-		super(xPos, yPos, color);
+	public Horse(int row, int col, Color color) {
+		super(row, col, color);
 	}
 
 	@Override
