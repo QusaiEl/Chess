@@ -40,12 +40,20 @@ public class Chess { //TODO problem: check & checkmate states //TODO king wont m
 
 			userMove(fromRow,fromCol,toRow,toCol);
 			Board.printBoard();
+			if(Board.checkingPiece() != null){
+				System.out.print("check ");
+			}
+			if(Board.isMate()){
+				System.out.print("mate");
+			} else {
+				System.out.println("");
+			}
 			if(isWhiteTurn == true) {
 				System.out.print("White Move: ");
 			} else {
 				System.out.print("Black Move: ");
 			}
-			System.out.print(Board.checkingPiece());
+			
 		}
 		userIn.close();
 		

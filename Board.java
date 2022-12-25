@@ -76,9 +76,11 @@ public class Board {
 	 * 
 	 * @return
 	 */
-	public boolean isMate() {
+	public static boolean isMate() {
 		
-		if(validCheckMoves().isEmpty()) {
+		if(validCheckMoves() == null){
+			return false;
+		} else if(validCheckMoves().isEmpty()) {
 			return true;
 		} else {
 			return false;
@@ -129,7 +131,7 @@ public class Board {
 				
 			}
 			
-			Piece checkingPiece = checkingPiece(); // TODO issue with certian spaces being unmovable/ untakeable: line 41 null pointerE destination.piece == null. issue with reversion and or checkPiece function
+			Piece checkingPiece = checkingPiece(); 
 			if(checkingPiece != null && checkingPiece.color != destination.piece.color) { // checks if own move put self in check
 				if(destination.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
 					Pawn temp = (Pawn)destination.piece;
@@ -174,11 +176,10 @@ public class Board {
 		Piece destinationPiece = destination.piece; // this can be set to null
 		Piece fromPiece = from.piece;
 		
-		boolean pawnCaseBool = false;
+		boolean hasMovedPrevious = false;
 		
 		HashMap<Piece, HashSet<Square>> validCheckMoves = validCheckMoves();
 		
-		//invalid move cases
 		if(!from.hasPiece()) { // case for no piece at desired square
 			return false; 
 		}
@@ -192,7 +193,7 @@ public class Board {
 			
 			if(from.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
 				Pawn temp = (Pawn)from.piece;
-				pawnCaseBool = temp.hasMoved;
+				hasMovedPrevious = temp.hasMoved;
 				temp.hasMoved = true;
 				from.piece = temp;
 			}
@@ -211,7 +212,7 @@ public class Board {
 			if(additionalCheckingPiece != null && additionalCheckingPiece.color != destination.piece.color) { // checks if own move put self in check
 				if(destination.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
 					Pawn temp = (Pawn)destination.piece;
-					temp.hasMoved = pawnCaseBool;
+					temp.hasMoved = hasMovedPrevious;
 					destination.piece = temp;
 				}
 				
@@ -252,7 +253,7 @@ public class Board {
 		// just look at checking piece and its path
 		// king moves 
 		if(checkingPiece().color == Color.BLACK) {
-			outHashMap.put(whiteKing, pieceMoves.get(whiteKing));
+			
 			
 			HashSet<Square> uncheckingSquares = checkingPiece.getUncheckingSquares(); // set of all squares that will uncheck king if filled
 			
@@ -267,9 +268,10 @@ public class Board {
 					outHashMap.put(piece, valSet); // associates the populated hash set with the current piece
 				}
 			}
+			outHashMap.put(whiteKing, pieceMoves.get(whiteKing));
 			
 		} else {
-			outHashMap.put(blackKing, pieceMoves.get(blackKing));
+			
 			
 			HashSet<Square> uncheckingSquares = checkingPiece.getUncheckingSquares(); // set of all squares that will uncheck king if filled
 			
@@ -284,10 +286,11 @@ public class Board {
 					outHashMap.put(piece, valSet); // associates the populated hash set with the current piece
 				}
 			}
+			outHashMap.put(blackKing, pieceMoves.get(blackKing));
 		}
 		return outHashMap;
-	}
-	
+	} 
+
 	/**
 	 * 
 	 */
