@@ -32,6 +32,7 @@ public abstract class Piece {
 		this.col = col;
 		this.row = row;
 		this.color = color;
+		this.hasMoved = false;
 		Board.spaces[row][col].piece = this;
 	}
 

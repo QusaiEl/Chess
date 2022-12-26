@@ -10,8 +10,6 @@ import java.util.HashSet;
  *
  */
 public class Rook extends Piece {
-
-	boolean hasMoved = false;
 	
 	public Rook(int row, int col, Color color) {
 		super(row, col, color);

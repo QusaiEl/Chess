@@ -12,8 +12,6 @@ import java.util.HashSet;
  */
 public class King extends Piece{ // issue with white king taking on the its first move
 	
-	public boolean hasMoved = false;
-	
 	public King(int row, int col, Color color) {
 		super(row, col, color);
 	}

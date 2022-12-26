@@ -11,11 +11,8 @@ import java.util.HashSet;
  */
 public class Pawn extends Piece {
 	
-	public boolean hasMoved;
-	
 	public Pawn(int row, int  col, Color color) {
 		super(row, col, color);
-		hasMoved = false;
 	}
 
 	@Override
@@ -33,7 +30,7 @@ public class Pawn extends Piece {
 			if(!Board.spaces[this.row + 1][this.col].hasPiece()) {
 				outSet.add(Board.spaces[this.row + 1][this.col]);
 				if(row + 2 < Board.spaces.length && hasMoved == false && !Board.spaces[this.row + 2][this.col].hasPiece() 
-						&& hasMoved == false) {
+						&& this.hasMoved == false) {
 					outSet.add(Board.spaces[this.row + 2][this.col]);
 				}
 			}
