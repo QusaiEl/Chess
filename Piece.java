@@ -34,17 +34,6 @@ public abstract class Piece {
 		this.color = color;
 		Board.spaces[row][col].piece = this;
 	}
-	
-	/**
-	 * 
-	 * @param p
-	 */
-	public Piece(Pawn p) { // needs to update boardMoves
-		this.col = p.col;
-		this.row = p.row;
-		this.color = p.color;
-		Board.spaces[row][col].piece = this;
-	}
 
 	/**
 	 * 
