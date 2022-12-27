@@ -1,4 +1,4 @@
-# ChessSrc
+# Chess
 ## Author: Qusai Elwazir
 Last updated Dec 26 2022
 ## Abstract
