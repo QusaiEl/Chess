@@ -2,7 +2,7 @@ package chessGame;
 
 import java.util.Scanner;
 
-public class Chess { //TODO problem: check & checkmate states //TODO king wont move past half way point
+public class Chess {
 	
 	public static boolean isWhiteTurn = true;
 	
@@ -38,7 +38,7 @@ public class Chess { //TODO problem: check & checkmate states //TODO king wont m
 			char toCol = line.charAt(2);
 			int toRow = Integer.parseInt(String.valueOf(line.charAt(3)));
 
-			userMove(fromRow,fromCol,toRow,toCol);
+			userMove(fromRow,fromCol,toRow,toCol, userIn);
 			Board.printBoard();
 			if(Board.checkingPiece() != null){
 				System.out.print("check ");
@@ -59,12 +59,12 @@ public class Chess { //TODO problem: check & checkmate states //TODO king wont m
 		
 	}
 	
-	private static void userMove(int fromRow, char fromColChar, int toRow, char toColChar) {
+	private static void userMove(int fromRow, char fromColChar, int toRow, char toColChar, Scanner userIn) {
 		int fromColNew = Character.toLowerCase(fromColChar) - 97; // converts input chars to an index
 		int toColNew = Character.toLowerCase(toColChar) - 97;
 		int fromRowNew = Board.spaces.length - fromRow; // converts input index to corresponding array index
 		int toRowNew = Board.spaces[0].length - toRow;
-		
+
 		if(isWhiteTurn && Board.spaces[fromRowNew][fromColNew].piece != null && Board.spaces[fromRowNew][fromColNew].piece.color != Color.WHITE) {
 				System.out.println("invalid move");
 				return;
@@ -74,14 +74,58 @@ public class Chess { //TODO problem: check & checkmate states //TODO king wont m
 		}
 	
 		if(Board.checkingPiece() == null && Board.move(fromRowNew, fromColNew, toRowNew, toColNew)) {
+			pawnPromote(Board.spaces[toRowNew][toColNew].piece, userIn);
 			isWhiteTurn = !isWhiteTurn;
 		} else if(Board.checkingPiece() != null && Board.checkMove(fromRowNew, fromColNew, toRowNew, toColNew)) {
+			pawnPromote(Board.spaces[toRowNew][toColNew].piece, userIn);
 			isWhiteTurn = !isWhiteTurn;
 			System.out.println("check");		
 		} else {
 			System.out.println("invalid move");
 		}
 		
+	}
+
+	private static void pawnPromote(Piece piece, Scanner userIn){ // starts at right case but does not change pawn, needs to also update all moves after change
+		if(!(piece instanceof Pawn)){
+			return;
+		}
+		if(piece.row == 0 || piece.row == 7){
+			System.out.println("Premote pawn to a special piece by entering R, H, B, or Q:");
+			while(userIn.hasNext()) {
+				String promotion = userIn.next();
+				if(promotion.charAt(0) == 'R' || promotion.charAt(0) == 'r'){
+					Piece newPiece = new Rook(piece.row, piece.col, piece.color);
+					changetoPiece(piece, newPiece);
+					return;
+
+				} else if(promotion.charAt(0) == 'H' || promotion.charAt(0) == 'h'){
+					Piece newPiece = new Horse(piece.row, piece.col, piece.color);
+					changetoPiece(piece, newPiece);
+					return;
+
+				} else if(promotion.charAt(0) == 'B' || promotion.charAt(0) == 'b'){
+					Piece newPiece = new Bishop(piece.row, piece.col, piece.color);
+					changetoPiece(piece, newPiece);
+					return;
+
+				} else if(promotion.charAt(0) == 'Q' || promotion.charAt(0) == 'q') {
+					Piece newPiece = new Queen(piece.row, piece.col, piece.color);
+					changetoPiece(piece, newPiece);
+					return;
+
+				} else {
+					System.out.println("invalid input");
+				}
+			}
+		}
+	} 
+
+	private static void changetoPiece(Piece piece, Piece newPiece){
+		Board.spaces[piece.row][piece.col].piece = newPiece;
+		Board.pieceMoves.remove(piece);
+		Board.pieceMoves.put(newPiece, null);
+		Board.updateBoard(newPiece);
 	}
 	
 }

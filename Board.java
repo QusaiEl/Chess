@@ -72,7 +72,7 @@ public class Board {
 		return null;
 	}
 	
-	/**
+	/** doesnt work yet
 	 * 
 	 * @return
 	 */
@@ -101,7 +101,7 @@ public class Board {
 		Piece destinationPiece = destination.piece; // this can be set to null
 		Piece fromPiece = from.piece;
 		
-		boolean pawnCaseBool = false;
+		boolean hasMovedPrevious = false;
 		
 		//invalid move cases
 		if(!from.hasPiece()) { // case for no piece at desired square
@@ -114,30 +114,19 @@ public class Board {
 				pieceMoves.remove(destination.piece);
 			}
 			
-			if(from.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
-				Pawn temp = (Pawn)from.piece;
-				pawnCaseBool = temp.hasMoved;
-				temp.hasMoved = true;
-				from.piece = temp;
-			}
+			hasMovedPrevious = fromPiece.hasMoved;
+			fromPiece.hasMoved = true;
 			
 			destination.piece = from.piece;
 			destination.piece.setCoords(toRow, toCol);  
 			from.removePiece();
 			
-			pieceMoves.replace(destination.piece, destination.piece.getPossibleMoves());
-			for(Piece piece : pieceMoves.keySet()) {
-				pieceMoves.replace(piece, piece.getPossibleMoves());
-				
-			}
+			updateBoard(fromPiece);
 			
 			Piece checkingPiece = checkingPiece(); 
 			if(checkingPiece != null && checkingPiece.color != destination.piece.color) { // checks if own move put self in check
-				if(destination.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
-					Pawn temp = (Pawn)destination.piece;
-					temp.hasMoved = pawnCaseBool;
-					destination.piece = temp;
-				}
+
+				fromPiece.hasMoved = hasMovedPrevious;
 				
 				destination.piece = destinationPiece;
 				if(destination.piece != null ) {
@@ -148,10 +137,7 @@ public class Board {
 				from.piece = fromPiece;
 				from.piece.setCoords(fromRow, fromCol);
 				
-				pieceMoves.replace(fromPiece, fromPiece.getPossibleMoves());
-				for(Piece piece : pieceMoves.keySet()) {
-					pieceMoves.replace(piece, piece.getPossibleMoves());
-				}
+				updateBoard(fromPiece);
 				
 				return false;
 			}
@@ -161,7 +147,7 @@ public class Board {
 		}
 		
 	}
-	
+
 	/**
 	 * 
 	 * @param fromRow
@@ -183,38 +169,27 @@ public class Board {
 		if(!from.hasPiece()) { // case for no piece at desired square
 			return false; 
 		}
-		// basic valid move Case
+
+		// valid move Cases
 		if(validCheckMoves.get(from.piece).contains(destination)) { 
 			
 			if(destination.hasPiece()) { // removes taken piece
 				pieceMoves.remove(destination.piece);
 			}
 			
-			
-			if(from.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
-				Pawn temp = (Pawn)from.piece;
-				hasMovedPrevious = temp.hasMoved;
-				temp.hasMoved = true;
-				from.piece = temp;
-			}
-			
+			hasMovedPrevious = fromPiece.hasMoved;
+			fromPiece.hasMoved = true;
+
 			destination.piece = from.piece;
 			destination.piece.setCoords(toRow, toCol);  
 			from.removePiece();
-			pieceMoves.replace(fromPiece, fromPiece.getPossibleMoves());
-			for(Piece piece : pieceMoves.keySet()) { // updates all piece moves with the new horse moves to ensure changes take into account where the horse can now move
-				pieceMoves.replace(piece, piece.getPossibleMoves());
-				
-			}
+			updateBoard(fromPiece);
 			
 			
 			Piece additionalCheckingPiece = additionalCheckingPiece(); // bad move need case for second checking piece
 			if(additionalCheckingPiece != null && additionalCheckingPiece.color != destination.piece.color) { // checks if own move put self in check
-				if(destination.piece instanceof Pawn) { // if piece that is being moved is a pawn, it may no longer move twice
-					Pawn temp = (Pawn)destination.piece;
-					temp.hasMoved = hasMovedPrevious;
-					destination.piece = temp;
-				}
+				
+				fromPiece.hasMoved = hasMovedPrevious;
 				
 				destination.piece = destinationPiece;
 				if(destination.piece != null ) {
@@ -224,11 +199,8 @@ public class Board {
 				
 				from.piece = fromPiece;
 				from.piece.setCoords(fromRow, fromCol);
-				
-				pieceMoves.replace(fromPiece, fromPiece.getPossibleMoves());
-				for(Piece piece : pieceMoves.keySet()) {
-					pieceMoves.replace(piece, piece.getPossibleMoves());
-				}
+
+				updateBoard(fromPiece);
 								
 				return false;
 			}

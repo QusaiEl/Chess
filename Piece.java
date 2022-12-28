@@ -20,6 +20,9 @@ public abstract class Piece {
 	 */
 	public Color color;
 	
+	/**
+	 * 
+	 */
 	public boolean hasMoved;
 
 	/**
