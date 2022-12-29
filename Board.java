@@ -77,10 +77,7 @@ public class Board {
 	 * @return
 	 */
 	public static boolean isMate() {
-		
-		if(validCheckMoves() == null){
-			return false;
-		} else if(validCheckMoves().isEmpty()) {
+		if(validCheckMoves().isEmpty()) {
 			return true;
 		} else {
 			return false;
@@ -107,6 +104,13 @@ public class Board {
 		if(!from.hasPiece()) { // case for no piece at desired square
 			return false; 
 		}
+
+		if(castleKing(fromRow, fromCol, toRow, toCol)){ // castle king case
+			fromPiece.hasMoved = true;
+			destinationPiece.hasMoved = true;
+			return true;
+		}
+
 		// basic valid move Case
 		if(pieceMoves.get(from.piece).contains(destination)) {
 			
@@ -209,6 +213,71 @@ public class Board {
 			return false;
 		}
 		
+	}
+
+	private static boolean castleKing(int fromRow, int fromCol, int toRow, int toCol){
+		if(Board.spaces[fromRow][fromCol].piece instanceof King && spaces[toCol][toCol].hasPiece() && spaces[toCol][toCol].piece instanceof Rook){
+			Piece rook = Board.spaces[toRow][toCol].piece;
+			if(spaces[fromRow][fromCol].piece == whiteKing && whiteKing.canCastleKing(toRow, toCol)){
+				if(toCol < whiteKing.col){
+					spaces[whiteKing.row][whiteKing.col - 2].piece = whiteKing;
+					spaces[whiteKing.row][whiteKing.col].removePiece();
+					whiteKing.setCoords(whiteKing.row, whiteKing.col - 2);
+					spaces[whiteKing.row][whiteKing.col + 1].piece = rook;
+					spaces[toRow][toCol].removePiece();
+					rook.setCoords(whiteKing.row, whiteKing.col + 1);
+		
+					Board.updateBoard(rook);
+				} else {
+					spaces[whiteKing.row][whiteKing.col + 2].piece = whiteKing;
+					spaces[whiteKing.row][whiteKing.col].removePiece();
+					whiteKing.setCoords(whiteKing.row, whiteKing.col + 2);
+					spaces[whiteKing.row][whiteKing.col - 1].piece = rook;
+					spaces[toRow][toCol].removePiece();
+					rook.setCoords(whiteKing.row, whiteKing.col - 1);
+					
+					Board.updateBoard(rook);
+				}
+				return true;
+
+			} else if(spaces[fromRow][fromCol].piece == blackKing && blackKing.canCastleKing(toRow, toCol)) {
+				if(toCol < blackKing.col){
+					spaces[blackKing.row][blackKing.col - 2].piece = Board.blackKing;
+					spaces[blackKing.row][blackKing.col].removePiece();
+					blackKing.setCoords(blackKing.row, blackKing.col - 2);
+					spaces[blackKing.row][blackKing.col + 1].piece = rook;
+					spaces[toRow][toCol].removePiece();
+					rook.setCoords(blackKing.row, blackKing.col + 1);
+					
+					Board.updateBoard(rook);
+				} else {
+					spaces[blackKing.row][blackKing.col + 2].piece = Board.blackKing;
+					spaces[blackKing.row][blackKing.col].removePiece();
+					blackKing.setCoords(blackKing.row, blackKing.col + 2);
+					spaces[blackKing.row][blackKing.col - 1].piece = rook;
+					spaces[toRow][toCol].removePiece();
+					rook.setCoords(blackKing.row, blackKing.col - 1);
+					
+					Board.updateBoard(rook);
+				}
+			
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+	/**
+	 * 
+	 * @param movedPiece
+	 */
+	public static void updateBoard(Piece movedPiece){
+		pieceMoves.replace(movedPiece, movedPiece.getPossibleMoves());
+				for(Piece piece : pieceMoves.keySet()) {
+					pieceMoves.replace(piece, piece.getPossibleMoves());
+				}
 	}
 	
 	/**

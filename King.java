@@ -49,19 +49,38 @@ public class King extends Piece{ // issue with white king taking on the its firs
 		if(isMoveableSpace(row - 1, col - 1) && isSafeMove(row - 1, col - 1)) {
 			outSet.add(Board.spaces[row - 1][col - 1]);
 		}
-			
+
 	}
 	
-	private boolean canCastleKing(int row, int col) { // need to check spaces between
-		Square castleSquare = Board.spaces[row][col];
-		
-		if(!(castleSquare.piece instanceof Rook)) { // base case for if chosen position does not contain a rook
-			return false;
-		}
-		Rook rook = (Rook) Board.spaces[row][col].piece;
-		if(!this.hasMoved && castleSquare.hasPiece() 
-				&& !rook.hasMoved  
-				&& castleSquare.piece.color == this.color){
+	/**
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public boolean canCastleKing(int row, int col) { // need to check spaces between
+
+		if(!this.hasMoved && Board.spaces[row][col].hasPiece() 
+				&& !Board.spaces[row][col].piece.hasMoved  
+				&& Board.spaces[row][col].piece.color == this.color){
+			Piece rook = Board.spaces[row][col].piece;
+			if(rook.col < this.col){
+				int i = this.col - 1;
+				while(Board.spaces[this.row][i].piece != rook){ // checks spaces between king and specified rook
+					if(!Board.spaces[this.row][i].hasPiece()  && isSafeMove(this.row, i)){
+						i--;
+					} else {
+						return false;
+					}
+				}
+			} else if(rook.col > this.col){
+				int i = this.col + 1;
+				while(Board.spaces[this.row][i].piece != rook){ // checks spaces between king and specified rook
+					if(!Board.spaces[this.row][i].hasPiece() && isSafeMove(this.row, i)){
+						++i;
+					} else return false;
+				}
+			}
+				
 			return true;
 		} else {
 			return false;
