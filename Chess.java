@@ -42,11 +42,11 @@ public class Chess {
 			Board.printBoard();
 			if(Board.checkingPiece() != null){
 				System.out.print("check ");
-			}
-			if(Board.isMate()){
-				System.out.print("mate");
-			} else {
-				System.out.println("");
+				if(Board.isMate()){
+					System.out.print("mate");
+				} else {
+					System.out.println("");
+				}
 			}
 			if(isWhiteTurn == true) {
 				System.out.print("White Move: ");

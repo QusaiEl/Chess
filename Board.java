@@ -76,8 +76,14 @@ public class Board {
 	 * 
 	 * @return
 	 */
-	public static boolean isMate() {
-		if(validCheckMoves().isEmpty()) {
+	public static boolean isMate() { // issue is that valid checkmoves is not empty but assosciated hash sets may be 
+		if(checkingPiece() != null) {
+			HashMap<Piece, HashSet<Square>> moves = validCheckMoves();
+			for(Piece piece : moves.keySet()) {
+				if(!pieceMoves.get(piece).isEmpty()) {
+						return false;
+				}
+			}
 			return true;
 		} else {
 			return false;
@@ -286,10 +292,11 @@ public class Board {
 	 */
 	public static HashMap<Piece, HashSet<Square>> validCheckMoves() { 
 		Piece checkingPiece = checkingPiece();
-		if(checkingPiece == null) {
-			return null;
-		}
 		HashMap<Piece, HashSet<Square>> outHashMap = new HashMap<Piece, HashSet<Square>>();
+		if(checkingPiece == null) {
+			return outHashMap;
+		}
+		
 		
 		// just look at checking piece and its path
 		// king moves 
